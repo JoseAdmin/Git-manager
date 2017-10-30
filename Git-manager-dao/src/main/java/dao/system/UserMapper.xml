@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.system.UserMapper" >
+  <resultMap id="BaseResultMap" type="entity.system.User" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="OTHER" />
+    <result column="IDENTITY_CARD" property="identityCard" jdbcType="OTHER" />
+    <result column="PASSWORD" property="password" jdbcType="OTHER" />
+    <result column="SEX" property="sex" jdbcType="DECIMAL" />
+    <result column="EMAIL" property="email" jdbcType="OTHER" />
+    <result column="PHONE" property="phone" jdbcType="OTHER" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="POSITION_ID" property="positionId" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+    <result column="STATE" property="state" jdbcType="DECIMAL" />
+    <association property="position" javaType="Position"  select="dao.system.PositionMapper.selectById" column="POSITION_ID"/>
+  	<association property="role" javaType="Role"  select="dao.system.RoleMapper.selectById" column="ROLE_ID"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, NAME, IDENTITY_CARD, PASSWORD, SEX, EMAIL, PHONE, ROLE_ID, POSITION_ID, CREATE_DATE, 
+    STATE
+  </sql>
+  
+  <!-- 插入数据开始 -->
+  
+  <!--添加用户-->
+  <insert id="insert" parameterType="entity.system.User"  useGeneratedKeys="true" keyProperty="id">
+	  	  
+  			insert into USERINFO
+			    <trim prefix="(" suffix=")" suffixOverrides="," >
+			      
+			        ID,
+			      <if test="name != null" >
+			        NAME,
+			      </if>
+			      <if test="identityCard != null" >
+			        IDENTITY_CARD,
+			      </if>
+			      <if test="password != null" >
+			        PASSWORD,
+			      </if>
+			      <if test="sex != null" >
+			        SEX,
+			      </if>
+			      <if test="email != null" >
+			        EMAIL,
+			      </if>
+			      <if test="phone != null" >
+			        PHONE,
+			      </if>
+			      <if test="roleId != null" >
+			        ROLE_ID,
+			      </if>
+			      <if test="positionId != null" >
+			        POSITION_ID,
+			      </if>
+			      <if test="createDate != null" >
+			        CREATE_DATE,
+			      </if>
+			      <if test="state != null" >
+			        STATE,
+			      </if>
+			    </trim>
+			    <trim prefix="values (" suffix=")" suffixOverrides="," >
+			        null,
+			      <if test="name != null" >
+			        #{name,jdbcType=OTHER},
+			      </if>
+			      <if test="identityCard != null" >
+			        #{identityCard,jdbcType=OTHER},
+			      </if>
+			      <if test="password != null" >
+			        #{password,jdbcType=OTHER},
+			      </if>
+			      <if test="sex != null" >
+			        #{sex,jdbcType=DECIMAL},
+			      </if>
+			      <if test="email != null" >
+			        #{email,jdbcType=OTHER},
+			      </if>
+			      <if test="phone != null" >
+			        #{phone,jdbcType=OTHER},
+			      </if>
+			      <if test="roleId != null" >
+			        #{roleId,jdbcType=DECIMAL},
+			      </if>
+			      <if test="positionId != null" >
+			        #{positionId,jdbcType=DECIMAL},
+			      </if>
+			      <if test="createDate != null" >
+			        #{createDate,jdbcType=DATE},
+			      </if>
+			      <if test="state != null" >
+			        #{state,jdbcType=DECIMAL},
+			      </if>
+			    </trim>
+  </insert>
+<!-- 插入数据开始 -->
+  
+  
+ <!-- 修改数据开始 -->
+   <update id="update" parameterType="entity.system.User" >
+    	update USERINFO
+		    <set >
+		      <if test="name != null" >
+		        NAME = #{name,jdbcType=OTHER},
+		      </if>
+		      <if test="identityCard != null" >
+		        IDENTITY_CARD = #{identityCard,jdbcType=OTHER},
+		      </if>
+		      <if test="password != null" >
+		        PASSWORD = #{password,jdbcType=OTHER},
+		      </if>
+		      <if test="sex != null" >
+		        SEX = #{sex,jdbcType=DECIMAL},
+		      </if>
+		      <if test="email != null" >
+		        EMAIL = #{email,jdbcType=OTHER},
+		      </if>
+		      <if test="phone != null" >
+		        PHONE = #{phone,jdbcType=OTHER},
+		      </if>
+		      <if test="roleId != null" >
+		        ROLE_ID = #{roleId,jdbcType=DECIMAL},
+		      </if>
+		      <if test="positionId != null" >
+		        POSITION_ID = #{positionId,jdbcType=DECIMAL},
+		      </if>
+		      <if test="createDate != null" >
+		        CREATE_DATE = #{createDate,jdbcType=DATE},
+		      </if>
+		      <if test="state != null" >
+		        STATE = #{state,jdbcType=DECIMAL},
+		      </if>
+		    </set>
+    	where ID = #{id,jdbcType=DECIMAL}
+  </update>
+ <!-- 修改数据结束 -->
+  
+  
+ <!-- 查询数据开始 -->
+ 
+  	<!-- 根据ID查询用户 -->
+	  	<select id="selectById"  resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+		    select 
+		    name,password,id
+			    from USERINFO
+		    where id= #{id}
+		    order by CREATE_DATE desc
+	    </select>
+	    
+	    
+	<!-- 根据职位ID查询用户 --> 
+	    <select id="selectByPositionId"  resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+			    select 
+			    <include refid="Base_Column_List" />
+				    from USERINFO
+			    where POSITION_ID= #{positionId}
+			    order by CREATE_DATE desc
+	   </select>
+   
+   <!-- 根据角色ID查询用户 -->
+	   <select id="selectByRoleId"  resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+		    select 
+		    <include refid="Base_Column_List" />
+			    from USERINFO
+		    where Role_ID= #{roleId}
+		    order by CREATE_DATE desc
+	  </select>
+  
+  <!-- 根据身份证查询在职用户 -->
+	    <select id="selectByIdentityCard"  resultMap="BaseResultMap" parameterType="java.lang.String" >
+		    select 
+		    <include refid="Base_Column_List" />
+			from USERINFO
+		    where  STATE =1 
+		   and  IDENTITY_CARD= #{identityCard}
+		   order by CREATE_DATE desc
+	  </select>
+  
+  <!-- 分页查询用户 -->
+		<select id="selectByPageHelper"  resultMap="BaseResultMap" parameterType="entity.common.PageHelper" >
+	 	 select 
+		<include refid="Base_Column_List" />
+		 from  USERINFO 
+	    <where>
+	    	<if test="requires!=null">
+	    			<if test="requires.name!=null">
+		  		  			 and NAME like concat(concat('%',#{requires.name}),'%')
+		  		   </if>
+		  		   
+		  		   <if test="requires.identityCard!=null">
+		  		  			 and IDENTITY_CARD like concat(concat('%',#{requires.identityCard}),'%')
+		  		   </if>
+		  		   
+		  		    <if test="requires.sex!=null">
+		  		  			 and SEX=#{requires.sex}
+		  		   </if>
+		  		   
+		  		   <if test="requires.email!=null">
+		  		  			 and EMAIL like concat(concat('%',#{requires.email}),'%')
+		  		   </if>
+		  		  
+		  		   <if test="requires.phone!=null">
+		  		  			 and PHONE like concat(concat('%',#{requires.phone}),'%')
+		  		   </if>
+		  		   
+	    			<if test="requires.positionId!=null">
+	    					 and POSITION_ID=#{requires.positionId}
+	    			</if>
+	    			
+	    			<if test="requires.state!=null">
+	    					 and STATE=#{requires.state}
+	    			</if>
+		  		
+		  		   <if test="requires.roleId!=null">
+	    					 and ROLE_ID=#{requires.roleId}
+	    			</if>
+	    			
+	    			<if test="requires.departmentId !=null">
+	    					 and position_id IN(SELECT id FROM POSITION WHERE dep_id=#{requires.departmentId})
+	    			</if>
+			</if>
+	    </where>
+		order by CREATE_DATE DESC
+		LIMIT  #{current},#{pageSize}
+	  </select>
+  
+  
+  <!-- 分页查询用户总行数 -->
+   <select id="selectSumByPageHelper"  resultType="java.lang.Integer"  parameterType="entity.common.PageHelper" >
+ 		 select count(*)  from USERINFO
+		    <where>
+		    	<if test="requires!=null">
+		    			<if test="requires.name!=null">
+			  		  			 and NAME like concat(concat('%',#{requires.name}),'%')
+			  		   </if>
+			  		   
+			  		   <if test="requires.identityCard!=null">
+			  		  			 and IDENTITY_CARD like concat(concat('%',#{requires.identityCard}),'%')
+			  		   </if>
+			  		   
+			  		    <if test="requires.sex!=null">
+			  		  			 and SEX=#{requires.sex}
+			  		   </if>
+			  		   
+			  		   <if test="requires.email!=null">
+			  		  			 and EMAIL like concat(concat('%',#{requires.email}),'%')
+			  		   </if>
+			  		  
+			  		   <if test="requires.phone!=null">
+			  		  			 and PHONE like concat(concat('%',#{requires.phone}),'%')
+			  		   </if>
+			  		   
+		    			<if test="requires.positionId!=null">
+		    					 and POSITION_ID=#{requires.positionId}
+		    			</if>
+		    			
+		    			<if test="requires.state!=null">
+		    					 and STATE=#{requires.state}
+		    			</if>
+			  		
+			  		   <if test="requires.roleId!=null">
+		    					 and ROLE_ID=#{requires.roleId}
+		    			</if>
+				</if>
+		    </where>
+		order by CREATE_DATE desc
+  </select>
+  <!-- 查询数据结束 -->
+ 
+
+</mapper>
