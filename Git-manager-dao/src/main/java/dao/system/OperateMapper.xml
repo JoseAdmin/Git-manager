@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.system.OperateMapper">
+	<resultMap id="BaseResultMap" type="entity.system.Operate">
+		<id column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="OTHER" />
+		<result column="DESCRIPTION" property="description" jdbcType="OTHER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, NAME, DESCRIPTION
+	</sql>
+
+	<!-- 查询数据开始 -->
+	<!-- 根据模块ID获取集合 -->
+	<select id="selectByMenuId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from OPERATE
+		where id in(select OPERATE_ID from OPERATE_SCOPE where
+		MENU_ID=#{id,jdbcType=DECIMAL})
+	</select>
+
+	<!-- 查询数据开始 -->
+	<!-- 查询分页总行数 -->
+	<select id="selectSumByPageHelper" resultType="java.lang.Integer">
+		select count(1) from OPERATE
+		<where>
+			<if test="requires!=null">
+				<if test="requires.name !=null">
+					and NAME like concat(concat('%',#{requires.name }),'%')
+				</if>
+			</if>
+		</where>
+	</select>
+	<!--查询数据结束 -->
+
+	<!-- 查询数据开始 -->
+	<!-- 查询分页数据 -->
+	<select id="selectByPageHelper" resultMap="BaseResultMap" parameterType="entity.common.PageHelper">
+		SELECT <include refid="Base_Column_List" /> FROM OPERATE 
+		<where>
+			<if test="requires!=null">
+				<if test="requires.name !=null">
+					and NAME like concat(concat('%',#{requires.name }),'%')
+				</if>
+			</if>
+		</where>
+		 LIMIT #{current},#{pageSize}  
+	</select>
+	<!--查询数据结束 -->
+
+	<!-- 查询数据开始 -->
+	<!-- 根据名称查询 -->
+	<select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from OPERATE
+		where NAME = #{name,jdbcType=OTHER}
+	</select>
+	<!--查询数据结束 -->
+
+	<!-- 根据ID查询 -->
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from OPERATE
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<!-- 查询数据结束 -->
+
+	<!-- 删除数据开始 -->
+	<!-- 根据ID删除数据 -->
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from OPERATE
+		where
+		ID = #{id,jdbcType=DECIMAL} and id not in(select OPERATE_ID from
+		OPERATE_SCOPE where OPERATE_ID=#{id,jdbcType=DECIMAL} )
+	</delete>
+	<!-- 删除数据结束 -->
+
+
+	<!-- 插入数据开始 -->
+	<!-- 根据ID更新数据 -->
+	<insert id="insert" parameterType="entity.system.Operate" useGeneratedKeys="true" keyProperty="id">
+		insert into OPERATE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			ID,
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			   null,
+			<if test="name != null">
+				#{name,jdbcType=OTHER},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=OTHER},
+			</if>
+		</trim>
+	</insert>
+	<!-- 插入数据结束 -->
+
+	<!-- 更新数据开始 -->
+	<!--根据ID更新数据 -->
+	<update id="update" parameterType="entity.system.Operate">
+		update OPERATE
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=OTHER},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=OTHER},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<!-- 更新数据结束 -->
+	
+	<!-- 查询全部操作 -->
+	<select id="select" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from OPERATE
+	</select>
+	<!--查询数据结束 -->
+</mapper>
