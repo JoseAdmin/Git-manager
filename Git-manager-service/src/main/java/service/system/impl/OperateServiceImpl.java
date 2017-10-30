@@ -18,7 +18,7 @@ public class OperateServiceImpl implements IOperateService {
 
 	@Override
 	public int doSave(Operate operate) {
-		// 需要先判断是否有同名操作存在
+		
 		return operateMapper.insert(operate);
 	}
 
